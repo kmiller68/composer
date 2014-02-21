@@ -273,8 +273,7 @@ class Pool
             if (isset($this->packageByExactName[$name])) {
                 $candidates = array_merge($candidates, $this->packageByExactName[$name]);
             }
-        } else {
-            if (isset($this->packageByName[$name])) {
+        } elseif (isset($this->packageByName[$name])) {
                 $candidates = array_merge($candidates, $this->packageByName[$name]);
             }
         }
