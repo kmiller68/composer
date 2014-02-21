@@ -258,30 +258,6 @@ class RuleSetGenerator
         return $impossible;
     }
 
-    /**
-     * Adds all rules for all update packages of a given package
-     *
-     * @param PackageInterface $package Rules for this package's updates are to
-     *                                   be added
-     */
-    private function addRulesForUpdatePackages(PackageInterface $package)
-    {
-        $updates = $this->policy->findUpdatePackages($this->pool, $this->installedMap, $package);
-
-        foreach ($updates as $update) {
-            $this->addRulesForPackage($update);
-        }
-    }
-
-    private function whitelistFromUpdatePackages(PackageInterface $package)
-    {
-        $updates = $this->policy->findUpdatePackages($this->pool, $this->installedMap, $package, true);
-
-        foreach ($updates as $update) {
-            $this->whitelistFromPackage($update);
-        }
-    }
-
     protected function whitelistFromJobs()
     {
         foreach ($this->jobs as $job) {
@@ -335,7 +311,6 @@ class RuleSetGenerator
         $this->whitelistedNames = array();
         foreach ($this->installedMap as $package) {
             $this->whitelistFromPackage($package);
-            $this->whitelistFromUpdatePackages($package);
         }
         $this->whitelistFromJobs();
 
@@ -344,7 +319,6 @@ class RuleSetGenerator
         $this->addedMap = array();
         foreach ($this->installedMap as $package) {
             $this->addRulesForPackage($package);
-            $this->addRulesForUpdatePackages($package);
         }
 
         $this->addRulesForJobs();
