@@ -27,6 +27,7 @@ class Config
         'github-protocols' => array('git', 'https', 'ssh'),
         'vendor-dir' => 'vendor',
         'bin-dir' => '{$vendor-dir}/bin',
+        'ext-dir' => '{$vendor-dir}/ext',
         'cache-dir' => '{$home}/cache',
         'cache-files-dir' => '{$cache-dir}/files',
         'cache-repo-dir' => '{$cache-dir}/repo',
@@ -39,6 +40,7 @@ class Config
         'optimize-autoloader' => false,
         'prepend-autoloader' => true,
         'github-domains' => array('github.com'),
+        'ext-options' => array(),
     );
 
     public static $defaultRepositories = array(
@@ -135,6 +137,7 @@ class Config
         switch ($key) {
             case 'vendor-dir':
             case 'bin-dir':
+            case 'ext-dir':
             case 'process-timeout':
             case 'cache-dir':
             case 'cache-files-dir':
