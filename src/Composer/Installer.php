@@ -1136,4 +1136,19 @@ class Installer
 
         return $this;
     }
+
+    /** Enables extension installations.
+     *
+     * Call this if you would like to enable the use of extension
+     * installers. The default is to not automatically run extension
+     * installers.
+     *
+     * @return Installer
+     */
+    public function enableExtensions()
+    {
+        $this->installationManager->enableExtensions();
+
+        return $this;
+    }
 }

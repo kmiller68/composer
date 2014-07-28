@@ -45,6 +45,7 @@ class InstallCommand extends Command
                 new InputOption('no-progress', null, InputOption::VALUE_NONE, 'Do not output download progress.'),
                 new InputOption('verbose', 'v|vv|vvv', InputOption::VALUE_NONE, 'Shows more details including new commits pulled in when updating packages.'),
                 new InputOption('optimize-autoloader', 'o', InputOption::VALUE_NONE, 'Optimize autoloader during autoloader dump'),
+                new InputOption('extensions', null, InputOption::VALUE_OPTIONAL, 'Install php extensions.'),
                 new InputArgument('packages', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Should not be provided, use composer require instead to add a given package to composer.json.'),
             ))
             ->setHelp(<<<EOT
@@ -117,6 +118,10 @@ EOT
 
         if ($input->getOption('no-plugins')) {
             $install->disablePlugins();
+        }
+
+        if ($input->getOption('extensions')) {
+            $install->enableExtensions();
         }
 
         return $install->run();
