@@ -35,8 +35,10 @@ use Composer\Util\StreamContextFactory;
 class InstallationManager
 {
     private $installers = array();
+    private $extensionInstallers = array();
     private $cache = array();
     private $notifiablePackages = array();
+    private $enableExtensions = false;
 
     public function reset()
     {
@@ -55,6 +57,16 @@ class InstallationManager
     }
 
     /**
+     * Adds extension installer
+     *
+     * @param InstallerInterface $installer installer instance
+     */
+    public function addExtensionInstaller(InstallerInterface $installer)
+    {
+        array_unshift($this->extensionInstallers, $installer);
+    }
+
+    /**
      * Removes installer
      *
      * @param InstallerInterface $installer installer instance
@@ -64,6 +76,18 @@ class InstallationManager
         if (false !== ($key = array_search($installer, $this->installers, true))) {
             array_splice($this->installers, $key, 1);
             $this->cache = array();
+        }
+    }
+
+    /**
+     * Removes installer
+     *
+     * @param InstallerInterface $installer installer instance
+     */
+    public function removeInstaller(InstallerInterface $installer)
+    {
+        if (false !== ($key = array_search($installer, $this->extensionInstallers, true))) {
+            array_splice($this->extensionInstallers, $key, 1);
         }
     }
 
@@ -86,6 +110,16 @@ class InstallationManager
     }
 
     /**
+     * Enables Extensions.
+     *
+     * Changes an internal setting allowing extensions to be installed.
+     */
+    public function enableExtensions()
+    {
+        $this->enableExtensions = true;
+    }
+
+    /**
      * Returns installer for a specific package type.
      *
      * @param string $type package type
@@ -96,6 +130,26 @@ class InstallationManager
      */
     public function getInstaller($type)
     {
+
+        if (substr($type, 9) === "extension") {
+            if ($this->enableExtensions === false) {
+                throw new \InvalidArgumentException('Tried to install an extension while extensions are disabled. Try using the --extensions flag');
+            }
+
+            if (count($this->extensionInstaller) === 0) {
+                throw new \InvalidArgumentException('Tried to install an extension but no extension installers are available');
+            }
+
+            if ($type === "extension") {
+                return reset($this->extensionInstaller);
+            }
+
+            foreach ($this->extensionInstaller as $installer) {
+                if ($installer->supports($type)) {
+                    return $installer;
+                }
+            }
+        }
         $type = strtolower($type);
 
         if (isset($this->cache[$type])) {
