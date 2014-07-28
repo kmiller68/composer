@@ -41,6 +41,7 @@ class UpdateCommand extends Command
                 new InputOption('lock', null, InputOption::VALUE_NONE, 'Only updates the lock file hash to suppress warning about the lock file being out of date.'),
                 new InputOption('no-plugins', null, InputOption::VALUE_NONE, 'Disables all plugins.'),
                 new InputOption('no-custom-installers', null, InputOption::VALUE_NONE, 'DEPRECATED: Use no-plugins instead.'),
+                new InputOption('extensions', null, InputOption::VALUE_OPTIONAL, 'Install php extensions.'),
                 new InputOption('no-scripts', null, InputOption::VALUE_NONE, 'Skips the execution of all scripts defined in composer.json file.'),
                 new InputOption('no-progress', null, InputOption::VALUE_NONE, 'Do not output download progress.'),
                 new InputOption('with-dependencies', null, InputOption::VALUE_NONE, 'Add also all dependencies of whitelisted packages to the whitelist.'),
@@ -118,6 +119,10 @@ EOT
 
         if ($input->getOption('no-plugins')) {
             $install->disablePlugins();
+        }
+
+        if ($input->getOption('extensions')) {
+            $install->enableExtensions();
         }
 
         return $install->run();
