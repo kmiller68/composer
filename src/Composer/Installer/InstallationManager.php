@@ -80,11 +80,11 @@ class InstallationManager
     }
 
     /**
-     * Removes installer
+     * Removes extension installer
      *
      * @param InstallerInterface $installer installer instance
      */
-    public function removeInstaller(InstallerInterface $installer)
+    public function removeExtensionInstaller(InstallerInterface $installer)
     {
         if (false !== ($key = array_search($installer, $this->extensionInstallers, true))) {
             array_splice($this->extensionInstallers, $key, 1);
